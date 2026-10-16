@@ -8,13 +8,7 @@ import 'user_list.dart';
 
 
 class ProfilePage extends StatelessWidget {
-
   const ProfilePage({super.key});
-
-
-  
-  
-
 
 
   @override
@@ -101,17 +95,6 @@ class ProfilePage extends StatelessWidget {
 
 
           ),
-
-
-
-
-          const Icon(
-
-            Icons.settings_rounded,
-
-          ),
-
-
 
           const SizedBox(
 
@@ -471,7 +454,7 @@ class ProfilePage extends StatelessWidget {
 
                             "4",
 
-                            "Mengikuti",
+                            "Following",
 
                           ),
 
