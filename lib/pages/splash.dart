@@ -22,7 +22,6 @@ class _SplashPageState extends State<SplashPage> {
 
     timer = Timer(const Duration(seconds: 3), () {
       if (!mounted) return;
-
       bukaLogin();
     });
   }
@@ -65,11 +64,19 @@ class _SplashPageState extends State<SplashPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // Logo huruf T TAUTIKA
               Container(
                 width: 112,
                 height: 112,
                 decoration: BoxDecoration(
-                  color: biru,
+                  gradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFF38A5FF),
+                      Color(0xFF1454E8),
+                    ],
+                  ),
                   borderRadius: BorderRadius.circular(30),
                   boxShadow: [
                     BoxShadow(
@@ -79,14 +86,20 @@ class _SplashPageState extends State<SplashPage> {
                     ),
                   ],
                 ),
-                child: const Icon(
-                  Icons.school_rounded,
-                  size: 62,
-                  color: Colors.white,
+                child: const Center(
+                  child: Text(
+                    'T',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 78,
+                      fontWeight: FontWeight.w900,
+                      height: 1,
+                    ),
+                  ),
                 ),
               ),
 
-              const SizedBox(height: 28),
+              const SizedBox(height: 24),
 
               const Text(
                 'TAUTIKA',
