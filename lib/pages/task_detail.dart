@@ -1,7 +1,8 @@
 
 import 'package:flutter/material.dart';
+import 'package:tautika/app_colors.dart';
 
-class TaskDetailPage extends StatelessWidget {
+class TaskDetailPage extends StatefulWidget {
   final String nama;
   final String waktu;
   final String judul;
@@ -19,378 +20,328 @@ class TaskDetailPage extends StatelessWidget {
     required this.visibilitas,
   });
 
-  static const Color biru = Color(0xFF3478F6);
-  static const Color navy = Color(0xFF173B78);
-  static const Color latar = Color(0xFFF2F6FC);
+  @override
+  State<TaskDetailPage> createState() => _TaskDetailPageState();
+}
+
+class _TaskDetailPageState extends State<TaskDetailPage> {
+  final TextEditingController komentarController = TextEditingController();
+  final List<String> komentar = [];
+  bool disukai = false;
+
+  @override
+  void dispose() {
+    komentarController.dispose();
+    super.dispose();
+  }
+
+  void kirimKomentar() {
+    final teks = komentarController.text.trim();
+
+    if (teks.isEmpty) return;
+
+    setState(() {
+      komentar.add(teks);
+      komentarController.clear();
+    });
+
+    FocusScope.of(context).unfocus();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final isKuis = widget.kategori == 'Kuis';
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: tautikaBackground,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        foregroundColor: navy,
         elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: tautikaInk),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: const Text(
           'Detail Postingan',
           style: TextStyle(
+            color: tautikaInk,
+            fontSize: 19,
             fontWeight: FontWeight.bold,
-            color: navy,
           ),
         ),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         children: [
-          // Informasi pembuat postingan
-          Row(
-            children: [
-              const CircleAvatar(
-                radius: 24,
-                backgroundColor: Color(0xFFDCEBFF),
-                child: Icon(
-                  Icons.person,
-                  color: biru,
-                  size: 28,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          Container(
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: tautikaBorder.withAlpha(150)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   children: [
-                    Text(
-                      nama,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: navy,
+                    const CircleAvatar(
+                      radius: 24,
+                      backgroundColor: tautikaPaleBlue,
+                      child: Icon(
+                        Icons.person_rounded,
+                        color: tautikaBlue,
+                        size: 28,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.nama,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: tautikaInk,
+                              fontSize: 15,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            widget.waktu,
+                            style: const TextStyle(
+                              color: tautikaMuted,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(
+                      Icons.more_horiz_rounded,
+                      color: tautikaMuted,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 22),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 7,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isKuis
+                        ? const Color(0xFFFFF3DD)
+                        : tautikaPaleBlue,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    widget.kategori,
+                    style: TextStyle(
+                      color: isKuis
+                          ? const Color(0xFFB7791F)
+                          : tautikaBlue,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  widget.judul,
+                  style: const TextStyle(
+                    color: tautikaInk,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  widget.deskripsi,
+                  style: const TextStyle(
+                    color: Color(0xFF596579),
+                    fontSize: 14,
+                    height: 1.7,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const Divider(color: tautikaBorder),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Icon(
+                      widget.visibilitas == 'Publik'
+                          ? Icons.public_rounded
+                          : Icons.groups_rounded,
+                      size: 18,
+                      color: tautikaMuted,
+                    ),
+                    const SizedBox(width: 8),
                     Text(
-                      'Diunggah $waktu',
+                      'Visibilitas: ${widget.visibilitas}',
                       style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
+                        color: tautikaMuted,
+                        fontSize: 13,
                       ),
                     ),
                   ],
                 ),
-              ),
-              const Icon(
-                Icons.more_horiz,
-                color: Colors.grey,
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 24),
-
-          // Kategori dan visibilitas
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              const _Label(
-                teks: 'Tugas / Kuis',
-                ikon: Icons.quiz_outlined,
-              ),
-              _Label(
-                teks: kategori,
-                ikon: Icons.book_outlined,
-              ),
-              _Label(
-                teks: visibilitas,
-                ikon: Icons.public,
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 20),
-
-          // Judul postingan
-          Text(
-            judul,
-            style: const TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-              color: navy,
-            ),
-          ),
-
-          const SizedBox(height: 12),
-
-          Text(
-            deskripsi,
-            style: const TextStyle(
-              color: Colors.black54,
-              fontSize: 14,
-              height: 1.5,
-            ),
-          ),
-
-          const SizedBox(height: 24),
-
-          const _BagianJudul(judul: 'Deskripsi'),
-
-          const SizedBox(height: 10),
-
-          const Text(
-            'Pelajari materi dan perhatikan instruksi yang '
-            'diberikan oleh pembuat postingan. Gunakan informasi '
-            'dan lampiran yang tersedia sebagai referensi '
-            'untuk menyelesaikan tugas atau memahami materi kuis.',
-            style: TextStyle(
-              fontSize: 14,
-              height: 1.6,
-              color: Colors.black87,
-            ),
-          ),
-
-          const SizedBox(height: 24),
-
-          const _BagianJudul(judul: 'Informasi'),
-
-          const SizedBox(height: 12),
-
-          _InfoBaris(
-            ikon: Icons.person_outline,
-            label: 'Pembuat',
-            nilai: nama,
-          ),
-
-          const SizedBox(height: 12),
-
-          _InfoBaris(
-            ikon: Icons.category_outlined,
-            label: 'Kategori',
-            nilai: kategori,
-          ),
-
-          const SizedBox(height: 12),
-
-          _InfoBaris(
-            ikon: Icons.visibility_outlined,
-            label: 'Visibilitas',
-            nilai: visibilitas,
-          ),
-
-          const SizedBox(height: 24),
-
-          const _BagianJudul(judul: 'Lampiran'),
-
-          const SizedBox(height: 12),
-
-          Container(
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: latar,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                color: const Color(0xFFE2EAF5),
-              ),
-            ),
-            child: const Row(
-              children: [
-                Icon(
-                  Icons.insert_drive_file_outlined,
-                  color: biru,
-                  size: 34,
+                const SizedBox(height: 18),
+                Row(
+                  children: [
+                    OutlinedButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          disukai = !disukai;
+                        });
+                      },
+                      icon: Icon(
+                        disukai
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color: disukai ? Colors.red : tautikaBlue,
+                        size: 19,
+                      ),
+                      label: Text(
+                        disukai ? 'Disukai' : 'Suka',
+                        style: const TextStyle(color: tautikaInk),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    OutlinedButton.icon(
+                      onPressed: () {
+                        FocusScope.of(context).requestFocus(
+                          FocusNode(),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.chat_bubble_outline,
+                        size: 18,
+                      ),
+                      label: Text('Komentar (${komentar.length})'),
+                    ),
+                  ],
                 ),
-                SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Lampiran postingan',
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: tautikaBorder.withAlpha(150)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Komentar',
+                  style: TextStyle(
+                    color: tautikaInk,
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 14),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const CircleAvatar(
+                      radius: 19,
+                      backgroundColor: tautikaPaleBlue,
+                      child: Icon(
+                        Icons.person,
+                        color: tautikaBlue,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: TextField(
+                        controller: komentarController,
+                        minLines: 1,
+                        maxLines: 4,
+                        decoration: InputDecoration(
+                          hintText: 'Tulis komentar...',
+                          filled: true,
+                          fillColor: tautikaBackground,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 12,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            borderSide: const BorderSide(
+                              color: tautikaBorder,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            borderSide: const BorderSide(
+                              color: tautikaBorder,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            borderSide: const BorderSide(
+                              color: tautikaBlue,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: kirimKomentar,
+                      icon: const Icon(
+                        Icons.send_rounded,
+                        color: tautikaBlue,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 14),
+                if (komentar.isEmpty)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    child: Center(
+                      child: Text(
+                        'Belum ada komentar. Jadilah yang pertama!',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: tautikaMuted,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  )
+                else
+                  ...komentar.map(
+                    (teks) => ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: const CircleAvatar(
+                        backgroundColor: tautikaPaleBlue,
+                        child: Icon(
+                          Icons.person,
+                          color: tautikaBlue,
+                        ),
+                      ),
+                      title: const Text(
+                        'Kamu',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 13,
                         ),
                       ),
-                      SizedBox(height: 5),
-                      Text(
-                        'File belum tersedia',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
+                      subtitle: Text(teks),
+                    ),
                   ),
-                ),
-                Icon(
-                  Icons.download_outlined,
-                  color: biru,
-                ),
               ],
             ),
           ),
-
-          const SizedBox(height: 28),
-
-          // Tombol aksi awal
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'Fitur simpan belum tersedia.',
-                        ),
-                      ),
-                    );
-                  },
-                  icon: const Icon(Icons.bookmark_border),
-                  label: const Text('Simpan'),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: biru,
-                    side: const BorderSide(color: biru),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 14,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'Fitur bagikan belum tersedia.',
-                        ),
-                      ),
-                    );
-                  },
-                  icon: const Icon(Icons.share_outlined),
-                  label: const Text('Bagikan'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: biru,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 14,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 20),
         ],
       ),
-    );
-  }
-}
-
-class _BagianJudul extends StatelessWidget {
-  final String judul;
-
-  const _BagianJudul({
-    required this.judul,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      judul,
-      style: const TextStyle(
-        fontSize: 17,
-        fontWeight: FontWeight.bold,
-        color: TaskDetailPage.navy,
-      ),
-    );
-  }
-}
-
-class _Label extends StatelessWidget {
-  final String teks;
-  final IconData ikon;
-
-  const _Label({
-    required this.teks,
-    required this.ikon,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 11,
-        vertical: 8,
-      ),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEAF2FF),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            ikon,
-            size: 15,
-            color: TaskDetailPage.biru,
-          ),
-          const SizedBox(width: 5),
-          Text(
-            teks,
-            style: const TextStyle(
-              color: Color(0xFF2459A9),
-              fontSize: 12,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _InfoBaris extends StatelessWidget {
-  final IconData ikon;
-  final String label;
-  final String nilai;
-
-  const _InfoBaris({
-    required this.ikon,
-    required this.label,
-    required this.nilai,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(
-          ikon,
-          color: TaskDetailPage.biru,
-          size: 21,
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Text(
-            label,
-            style: const TextStyle(
-              color: Colors.black54,
-            ),
-          ),
-        ),
-        Flexible(
-          child: Text(
-            nilai,
-            textAlign: TextAlign.end,
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-              color: TaskDetailPage.navy,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

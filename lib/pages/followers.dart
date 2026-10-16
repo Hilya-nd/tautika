@@ -5,34 +5,17 @@ import '../app_colors.dart';
 
 
 class FollowersPage extends StatelessWidget {
-
-
   const FollowersPage({super.key});
-
-
   @override
   Widget build(BuildContext context) {
 
 
     return Scaffold(
-
-
-
       backgroundColor:
       tautikaBackground,
-
-
-
-
       appBar: AppBar(
-
-
-
         backgroundColor:
         Colors.white,
-
-
-
         foregroundColor:
         const Color(0xff1F2937),
 

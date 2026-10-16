@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'package:tautika/navbar.dart';
-import 'package:tautika/pages/splash.dart';
+// import 'package:tautika/pages/splash.dart';
+import 'package:tautika/pages/home.dart';
 
 void main() {
     runApp(const MyApp());
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
                 primarySwatch: Colors.blue,
                 scaffoldBackgroundColor: Colors.white,
             ),
-        home: const SplashPage(),
+        home: const HomePage(),
         );
   }
 }
