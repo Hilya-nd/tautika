@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:tautika/app_colors.dart';
 import 'package:tautika/pages/task_detail.dart';
+import 'package:tautika/notification.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -47,7 +48,11 @@ class _HomePageState extends State<HomePage> {
   ];
 
   final Set<int> disukai = {};
-  final Map<int, int> jumlahSuka = {0: 12, 1: 8, 2: 15};
+  final Map<int, int> jumlahSuka = {
+    0: 12,
+    1: 8,
+    2: 15,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -66,9 +71,16 @@ class _HomePageState extends State<HomePage> {
             _filterKategori(),
             Expanded(
               child: daftarTampil.isEmpty
-                  ? const Center(child: Text('Belum ada postingan.'))
+                  ? const Center(
+                      child: Text('Belum ada postingan.'),
+                    )
                   : ListView.builder(
-                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
+                      padding: const EdgeInsets.fromLTRB(
+                        16,
+                        8,
+                        16,
+                        20,
+                      ),
                       itemCount: daftarTampil.length,
                       itemBuilder: (context, index) {
                         final entry = daftarTampil[index];
@@ -85,6 +97,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // HEADER DAN TOMBOL NOTIFIKASI
   Widget _header() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 18, 20, 12),
@@ -95,7 +108,10 @@ class _HomePageState extends State<HomePage> {
             height: 44,
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [Color(0xFF38A5FF), Color(0xFF1454E8)],
+                colors: [
+                  Color(0xFF38A5FF),
+                  Color(0xFF1454E8),
+                ],
               ),
               borderRadius: BorderRadius.circular(13),
             ),
@@ -124,16 +140,21 @@ class _HomePageState extends State<HomePage> {
               ),
               Text(
                 'Temukan inspirasi belajar',
-                style: TextStyle(color: tautikaMuted, fontSize: 11),
+                style: TextStyle(
+                  color: tautikaMuted,
+                  fontSize: 11,
+                ),
               ),
             ],
           ),
           const Spacer(),
           IconButton(
+            tooltip: 'Notifikasi',
             onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Fitur notifikasi akan segera tersedia.'),
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NotificationsPage(),
                 ),
               );
             },
@@ -148,6 +169,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // KARTU SAPAAN
   Widget _sapaan() {
     return Container(
       width: double.infinity,
@@ -157,7 +179,10 @@ class _HomePageState extends State<HomePage> {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF3478F6), Color(0xFF2056C7)],
+          colors: [
+            Color(0xFF3478F6),
+            Color(0xFF2056C7),
+          ],
         ),
         borderRadius: BorderRadius.circular(20),
       ),
@@ -186,6 +211,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // FILTER SEMUA, TUGAS, DAN KUIS
   Widget _filterKategori() {
     final kategori = ['Semua', 'Tugas', 'Kuis'];
 
@@ -224,7 +250,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _kartuPostingan(Map<String, dynamic> data, int id) {
+  // KARTU POSTINGAN
+  Widget _kartuPostingan(
+    Map<String, dynamic> data,
+    int id,
+  ) {
     final sudahDisukai = disukai.contains(id);
     final isKuis = data['kategori'] == 'Kuis';
 
@@ -234,7 +264,9 @@ class _HomePageState extends State<HomePage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: tautikaBorder.withAlpha(150)),
+        border: Border.all(
+          color: tautikaBorder.withAlpha(150),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -318,7 +350,10 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
-          const Divider(height: 25, color: tautikaBorder),
+          const Divider(
+            height: 25,
+            color: tautikaBorder,
+          ),
           Row(
             children: [
               InkWell(
@@ -327,10 +362,12 @@ class _HomePageState extends State<HomePage> {
                   setState(() {
                     if (sudahDisukai) {
                       disukai.remove(id);
-                      jumlahSuka[id] = (jumlahSuka[id] ?? 0) - 1;
+                      jumlahSuka[id] =
+                          (jumlahSuka[id] ?? 0) - 1;
                     } else {
                       disukai.add(id);
-                      jumlahSuka[id] = (jumlahSuka[id] ?? 0) + 1;
+                      jumlahSuka[id] =
+                          (jumlahSuka[id] ?? 0) + 1;
                     }
                   });
                 },
@@ -342,7 +379,9 @@ class _HomePageState extends State<HomePage> {
                         sudahDisukai
                             ? Icons.favorite_rounded
                             : Icons.favorite_border_rounded,
-                        color: sudahDisukai ? Colors.red : tautikaMuted,
+                        color: sudahDisukai
+                            ? Colors.red
+                            : tautikaMuted,
                         size: 21,
                       ),
                       const SizedBox(width: 6),
@@ -366,7 +405,10 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(width: 6),
               const Text(
                 'Komentar',
-                style: TextStyle(color: tautikaMuted, fontSize: 12),
+                style: TextStyle(
+                  color: tautikaMuted,
+                  fontSize: 12,
+                ),
               ),
               const Spacer(),
               TextButton(
@@ -374,7 +416,7 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => TaskDetailPage(
+                      builder: (context) => TaskDetailPage(
                         nama: data['nama'],
                         waktu: data['waktu'],
                         judul: data['judul'],
@@ -401,11 +443,15 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // LABEL KATEGORI
   Widget _labelKategori(String kategori) {
     final isKuis = kategori == 'Kuis';
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 6,
+      ),
       decoration: BoxDecoration(
         color: isKuis
             ? const Color(0xFFFFF3DD)
@@ -415,7 +461,9 @@ class _HomePageState extends State<HomePage> {
       child: Text(
         kategori,
         style: TextStyle(
-          color: isKuis ? const Color(0xFFB7791F) : tautikaBlue,
+          color: isKuis
+              ? const Color(0xFFB7791F)
+              : tautikaBlue,
           fontSize: 11,
           fontWeight: FontWeight.bold,
         ),
